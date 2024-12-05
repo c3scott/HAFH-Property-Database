@@ -1,0 +1,220 @@
+create database hafh;
+use hafh;
+
+CREATE TABLE manager (
+    manager_id INT PRIMARY KEY,
+    first_name VARCHAR(25) NOT NULL,
+    last_name VARCHAR(25) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    phone_number VARCHAR(10) NOT NULL, 
+    salary INT NOT NULL
+);
+
+CREATE TABLE building (
+    building_id INT PRIMARY KEY,
+    building_name VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE Apartment (
+    AptNo INT PRIMARY KEY,
+    building_id int NOT NULL,
+    occupation_status VARCHAR(50) NOT NULL,
+    NoOfRooms INT NOT NULL,
+    FOREIGN KEY (building_id) REFERENCES building(building_id)
+);
+
+CREATE TABLE corporate_client (
+    cc_id int PRIMARY KEY,
+    first_name VARCHAR(25) NOT NULL,
+    last_name varchar(25), 
+    email VARCHAR(50) NOT NULL,
+    phone_number varchar(10)
+);
+
+CREATE TABLE lease (
+    lease_id INT PRIMARY KEY,
+    AptNo INT NOT NULL,
+    building_id INT,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    monthly_rent INT NOT NULL,
+    security_deposit INT NOT NULL,
+    FOREIGN KEY (AptNo) REFERENCES Apartment(AptNo),
+    FOREIGN KEY (building_id) REFERENCES building(building_id)
+);
+
+CREATE TABLE inspector(
+inspector_id INT PRIMARY KEY,
+first_name varchar(25) not null,
+last_name varchar(25),
+email varchar(50) not null,
+phone_number VARCHAR(10)
+);
+
+CREATE TABLE inspection (
+    inspection_id int PRIMARY KEY,
+    building_id INT NOT NULL,
+    inspector_id INT NOT NULL,
+    completed_inspection_date DATE NOT NULL,
+    next_inspection_date DATE NOT NULL,
+    FOREIGN KEY (building_id) REFERENCES building(building_id),
+    FOREIGN KEY (inspector_id) REFERENCES inspector(inspector_id)
+);
+
+CREATE TABLE staff_member(
+staff_id INT PRIMARY KEY,
+full_name char(10) not null,
+email varchar(40) not null,
+phone_number VARCHAR(10)
+);
+
+CREATE TABLE eviction_notice(
+notice_id INT PRIMARY KEY,
+lease_id INT, 
+cc_id INT,
+aptno INT,
+eviction_status char(100),
+reason varchar(8000),
+FOREIGN KEY (lease_id) REFERENCES lease(lease_id),
+FOREIGN KEY (cc_id) REFERENCES corporate_client (cc_id)
+);
+CREATE TABLE rental_payment(
+payment_id char(7) not null PRIMARY KEY,
+lease_id INT,
+cc_id INT,
+payment_date date not null,
+payment_amount int not null,
+payment_method  CHAR(20) NOT NULL,
+FOREIGN KEY(lease_id) REFERENCES lease(lease_id),
+FOREIGN KEY(cc_id) REFERENCES corporate_client(cc_id)
+);
+
+CREATE TABLE maintenance_request(
+maintenance_id CHAR(7) NOT NULL PRIMARY KEY,
+assigned_staff INT,
+aptNo int(4),
+building_id INT,
+request_date date not null,
+request_status char(10) not null,
+request_description varchar(8000) not null,
+FOREIGN KEY (assigned_staff) REFERENCES staff_member(staff_id),
+FOREIGN KEY (aptNo) REFERENCES apartment(aptNo),
+FOREIGN KEY (building_id) REFERENCES building(building_id)
+);
+
+Insert into manager(manager_id, first_name, last_name, email, phone_number, salary)
+values(1234567, "Bob", "Smith", "bobsmith@gmail.com", 9169994455, 12000);
+Insert into manager(manager_id, first_name, last_name, email, phone_number, salary)
+values(7654321, "Olivia", "Jones", "jonesoli@gmail.com", 9165552323, 10349);
+Insert into manager(manager_id, first_name, last_name, email, phone_number, salary)
+values(0000123, "Sophia", "Lopez", "lolosuzie@gmail.com", 5309972153, 29500);
+
+Insert into building(building_id, building_name)
+Values(1, "alpha");
+Insert into building(building_id, building_name)
+Values(2, "beta");
+Insert into building(building_id, building_name)
+Values(3, "charlie");
+
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(1000, 1, "occupied", 4);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(2000, 2, "vacant", 2);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(1001, 1, "vacant", 3);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(3000, 3, "occupied", 2);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(1002, 1, "vacant", 4);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(2001, 2, "occupied", 2);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(1020, 1, "occupied", 1);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(3003, 3, "occupied", 3);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(1010, 1, "occupied", 4);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(2002, 2, "occupied", 1);
+Insert into apartment(aptno, building_id, occupation_status, noofrooms)
+Values(1011, 1, "occupied", 2);
+
+Insert into corporate_client(cc_id, first_name, last_name, email, phone_number)
+Values(1, "Jane",  "Johnson", "janej@gmail.com", 2093338888);
+Insert into corporate_client(cc_id, first_name, last_name, email, phone_number)
+Values(2, "Emily",  "Davis", "emda@gmail.com", 2093338877);
+Insert into corporate_client(cc_id, first_name, last_name, email, phone_number)
+Values(3, "Alice",  "Tucker", "alitucks@gmail.com", 8112243335);
+
+Insert into lease(lease_id, aptno, building_id, start_date, end_date, monthly_rent, security_deposit)
+Values(111, 1000, 1, "2024-12-25", "2025-12-24", 1299, 1899);
+Insert into lease(lease_id, aptno, building_id,start_date, end_date, monthly_rent, security_deposit)
+Values(113, 3003, 3, "2024-11-05", "2025-11-01", 1198, 1599);
+Insert into lease(lease_id, aptno, building_id, start_date, end_date, monthly_rent, security_deposit)
+Values(116, 2001, 2, "2024-05-23", "2025-05-20", 1999, 2000);
+Insert into lease(lease_id, aptno, building_id, start_date, end_date, monthly_rent, security_deposit)
+Values(117, 3000, 3, "2024-01-01", "2024-12-31", 1199, 900);
+Insert into lease(lease_id, aptno, building_id, start_date, end_date, monthly_rent, security_deposit)
+Values(120, 1020, 1, "2024-11-05", "2025-11-01", 1300, 1499);
+Insert into lease(lease_id, aptno, building_id, start_date, end_date, monthly_rent, security_deposit)
+Values(121, 1010, 1, "2024-04-28", "2025-04-29", 1999, 2199);
+Insert into lease(lease_id, aptno, building_id,start_date, end_date, monthly_rent, security_deposit)
+Values(122, 2002, 2, "2024-09-21", "2025-09-19", 1250, 1399);
+Insert into lease(lease_id, aptno, building_id, start_date, end_date, monthly_rent, security_deposit)
+Values(123, 1011, 1, "2024-08-28", "2025-08-29", 1499, 1500);
+
+Insert into inspector(inspector_id, first_name, last_name , email , phone_number)
+Values(91, "Todd", "Anderson", "tanderson@gmail.com", 9161239876);
+Insert into inspector(inspector_id, first_name, last_name , email , phone_number)
+Values(62, "Ava", "Brown", "browntown@gmail.com", 8311239876);
+Insert into inspector(inspector_id, first_name, last_name , email , phone_number)
+Values(25, "Matilda", "David", "matildadavid@outlook.com", 4081239436);
+
+Insert into inspection(inspection_id, building_id, inspector_id, completed_inspection_date, next_inspection_date)
+Values(543, 1, 91, "2024-12-20", "2025-02-21");
+Insert into inspection(inspection_id, building_id, inspector_id, completed_inspection_date, next_inspection_date)
+Values(544, 2, 62, "2024-08-30", "2024-11-30");
+Insert into inspection(inspection_id, building_id, inspector_id, completed_inspection_date, next_inspection_date)
+Values(545, 3, 25, "2025-03-07", "2025-06-02");
+
+Insert into staff_member(staff_id , full_name , email, phone_number)
+Values(777, "Sarah","sarahwilliams1@gmail.com", 4083453210);
+Insert into staff_member(staff_id , full_name , email, phone_number)
+Values(888, "Chris","chriscsegmail.com", 2093453240);
+Insert into staff_member(staff_id , full_name , email, phone_number)
+Values(999, "John","johnnyboy@outlook.com", 4153491100);
+
+Insert into eviction_notice(notice_id, lease_id, cc_id, aptno, eviction_status, reason)
+Values(001, 111, 1, 1000, "pending", "Damaged property");
+Insert into eviction_notice(notice_id, lease_id, cc_id, aptno, eviction_status, reason)
+Values(002, 113, 2, 3003, "evicted", "Failed to pay");
+
+Insert into maintenance_request(maintenance_id, assigned_staff, aptNo, building_id, 
+request_date, request_status, request_description)
+values(01, 777, 1000, 1, "2024-12-31", "Pending", "Low pressure water from shower.");
+Insert into maintenance_request(maintenance_id, assigned_staff, aptNo, building_id, 
+request_date, request_status, request_description)
+values(02, 999, 3003, 3, "2024-04-12", "Completed", "Microwave not working.");
+Insert into maintenance_request(maintenance_id, assigned_staff, aptNo, building_id, 
+request_date, request_status, request_description)
+values(03, 999, 1010, 1, "2024-12-29", "Pending", "Washing machine overflooding.");
+Insert into maintenance_request(maintenance_id, assigned_staff, aptNo, building_id, 
+request_date, request_status, request_description)
+values(04, 888, 2002, 2, "2024-10-06", "Completed", "Garbage disposal not turning on.");
+
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(1000, 111, 1, "2024-12-25", 1899, "ACH");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(1010, 121, 1, "2024-12-01", 1299, "Mailed Check");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(1020, 120, 1, "2024-11-05", 1499, "ACH");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(2001, 116, 2, "2024-05-16", 1999, "Mailed Check");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(2002, 122, 2, "2024-09-21", 1250, "ACH");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(3000, 117, 3, "2024-01-01", 1199, "ACH");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(3003, 113, 3, "2024-11-05", 1199, "ACH");
+Insert into rental_payment(payment_id, lease_id, cc_id, payment_date, payment_amount, payment_method)
+values(1011, 123, 1, "2024-08-28", 1499, "ACH");
